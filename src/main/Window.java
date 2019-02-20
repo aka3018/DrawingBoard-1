@@ -135,5 +135,5 @@ public class Window extends JFrame {
 		window.setVisible(true);
 	}
 
-	
+
 }
