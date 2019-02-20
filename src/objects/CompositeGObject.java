@@ -24,42 +24,40 @@ public class CompositeGObject extends GObject {
 
 	@Override
 	public void move(int dX, int dY) {
-		this.x = dX;
-		this.y = dY;
+		this.x += dX;
+		this.y += dY;
 		for (GObject gObject: gObjects){
 			gObject.move(dX,dY);
 		}
 	}
 
 	public void recalculateRegion() {
-        int minX = gObjects.get(0).x;
-        int minY = gObjects.get(0).y;
-        int maxX = gObjects.get(0).x;
-        int maxY = gObjects.get(0).y;
-        int maxHeigh = 0;
-        int maxWeidth = 0;
+		GObject firstGObject = gObjects.get(0);
 
-	    for (GObject gObject: gObjects){
-	        if (gObject.x >= maxX){
-	            maxX = gObject.x;
-	            maxHeigh = maxX;
-            }
-            if (gObject.y >= maxY){
-                maxY = gObject.y;
-                maxWeidth = maxY;
-            }
-            if (gObject.x <= minX){
-                minX = gObject.x;
-            }
+		int x = firstGObject.x;
+		int y = firstGObject.y;
+		int dX = firstGObject.x + firstGObject.width;
+		int dY = firstGObject.y + firstGObject.height;
 
-            if (gObject.y <= minY){
-                minY = gObject.y;
-            }
-        }
-        x = minX;
-	    y = minY;
-	    height = maxHeigh;
-	    width = maxWeidth;
+		for (GObject child : gObjects) {
+			if (child.x < x) {
+				x = child.x;
+			}
+			if (child.x + child.width > dX) {
+				dX = child.x + child.width;
+			}
+			if (child.y < y) {
+				y = child.y;
+			}
+			if (child.y + child.height > dY) {
+				dY = child.y + child.height;
+			}
+		}
+
+		this.x = x;
+		this.y = y;
+		this.width = dX - x;
+		this.height = dY - y;
 	}
 
 	@Override
